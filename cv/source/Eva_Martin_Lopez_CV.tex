@@ -1,0 +1,417 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage[explicit]{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={Eva Martín López's CV},
+    pdfauthor={Eva Martín López},
+    pdfcreator={LaTeX by Eva Martín López},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage[default, type1]{sourcesanspro} 
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0.15cm} % set column seperation
+\makeatletter
+\let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Eva Martín López - Page \thepage{} of \pageref*{LastPage}}
+}{}{} % replace number by desired string
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    % avoid page braking right after the section title
+    \needspace{4\baselineskip}
+    % make the font size of the section title large and color it with the primary color
+    \Large\color{primaryColor}
+}{
+}{
+}{
+    % print bold title, give 0.15 cm space and draw a line of 0.8 pt thickness
+    % from the end of the title to the end of the body
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[] % section title formatting
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+% \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for three column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{Last updated in February 2026}\hspace{\widthof{Last updated in February 2026}}%
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placelastupdatedtext
+    \begin{header}
+        \fontsize{30 pt}{30 pt}
+        \textbf{Eva Martín López}
+
+        \vspace{0.3 cm}
+
+        \normalsize
+        \mbox{\hrefWithoutArrow{https://maps.app.goo.gl/irvine}
+        {{\footnotesize\faMapMarker*}\hspace*{0.13cm}Irvine, CA}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:evamartinlopez02@gmail.com}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}evamartinlopez02@gmail.com}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+1-949-279-8678}{{\footnotesize\faPhone*}\hspace*{0.13cm}+1 (949) 279-8678}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://linkedin.com/in/eva-martin-lopez}{{\footnotesize\faLinkedinIn}\hspace*{0.13cm}eva-martin-lopez}}%
+    \end{header}
+
+    \vspace{0.3 cm - 0.3 cm}
+
+
+    \section{Experience}
+
+        \begin{twocolentry}{
+            Irvine, CA
+
+            Jan 2026 -- Present
+        }
+            \textbf{UC Irvine}, Balsells Research Fellow -- Visiting Researcher
+            \begin{highlights}
+                \item Conducting Master's thesis research in Professor Pierre Baldi's group
+                \item Applying deep learning to biomedical imaging, focusing on chemoresistance prediction at the single-cell level in breast cancer research
+                \item Developing and training convolutional neural networks for medical image analysis
+                \item Awarded the Balsells Fellowship, a competitive scholarship for Catalan researchers at UCI
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            Castelldefels, ES
+
+            Jan 2025 -- Feb 2026
+        }
+            \textbf{Geprom (Telefónica Tech)}, Software Developer
+            \begin{highlights}
+                \item Developed data spaces for secure data exchange in industrial environments using big data technologies and cloud-based systems
+                \item Contributed to industrial automation and digital transformation projects (Industry 4.0)
+                \item Worked with Docker, Kubernetes, and Helm
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            Barcelona, ES
+
+            Jun 2023 -- Jan 2025
+        }
+            \textbf{Institute for Bioengineering of Catalonia (IBEC)}, Research Assistant in Data Science
+            \begin{highlights}
+                \item Collaborated on research projects related to data analysis, visualization, and machine learning for biomedical research
+                \item Focused on data preprocessing, statistical modeling, and the application of AI in healthcare
+                \item Co-authored a publication in \textit{Critical Care Medicine} on breathing effort and survival in ARDS patients
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            Toledo, ES
+
+            Jan 2023 -- Jul 2023
+        }
+            \textbf{Janssen (Johnson \& Johnson)}, Internship -- Computational Chemistry Dept.
+            \begin{highlights}
+                \item Developed a Python package for the automation of molecular docking simulations
+                \item Worked with Git and Linux in a pharmaceutical R\&D environment
+            \end{highlights}
+        \end{twocolentry}
+
+
+    \section{Education}
+
+        \begin{threecolentry}{\textbf{MS}}{
+            Barcelona, ES
+
+            Sep 2024 -- Jun 2026
+        }
+            \textbf{Universitat Politècnica de Catalunya (UPC)}, Master's in Data Science
+            \begin{highlights}
+                \item Thesis at UC Irvine: Deep learning for biomedical imaging (Balsells Fellowship)
+                \item Focus: big data, statistical modeling, process mining, and machine learning
+            \end{highlights}
+        \end{threecolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{threecolentry}{\textbf{BS}}{
+            Barcelona, ES
+
+            Sep 2020 -- Jun 2023
+        }
+            \textbf{ESCI -- Universitat Pompeu Fabra}, Bachelor's in Bioinformatics
+            \begin{highlights}
+                \item Santander ESCI-UPF Excellence Scholarship (2020--2021 and 2021--2022)
+            \end{highlights}
+        \end{threecolentry}
+
+
+    \section{Publications}
+
+        \begin{samepage}
+            \begin{twocolentry}{
+                Jul 2025
+            }
+                \textbf{Association of Breathing Effort With Survival in Patients With Acute Respiratory Distress Syndrome}
+
+                \vspace{0.10 cm}
+
+                \textit{Critical Care Medicine}
+                \vspace{0.10 cm}
+
+        \href{https://journals.lww.com/ccmjournal/fulltext/2025/10000/association_of_breathing_effort_with_survival_in.12.aspx}{DOI: 10.1097/CCM.0000000000006477}
+            \end{twocolentry}
+        \end{samepage}
+
+        \vspace{0.2 cm}
+
+        \begin{samepage}
+            \begin{twocolentry}{
+                Under review
+            }
+                \textbf{Predictive Model for High Flow Nasal Cannula Failure Based on Metabolomics and Clinical Data}
+
+                \vspace{0.10 cm}
+
+                \textit{Journal of Critical Care} (submitted 2025)
+            \end{twocolentry}
+        \end{samepage}
+
+        \vspace{0.2 cm}
+
+        \begin{samepage}
+            \begin{twocolentry}{
+                Preprint, 2025
+            }
+                \textbf{Rapid Quantification of Short-Chain Fatty Acids by Fourier-Transform Infrared Spectroscopy for Microbiota Quality Assessment}
+
+                \vspace{0.10 cm}
+
+                \textit{bioRxiv}
+                \vspace{0.10 cm}
+
+        \href{https://doi.org/10.1101/2025.11.25.690441}{DOI: 10.1101/2025.11.25.690441}
+            \end{twocolentry}
+        \end{samepage}
+
+
+    \section{Conferences}
+
+        \begin{onecolentry}
+            \textbf{Conference of the Catalan Society of Intensive and Critical Medicine (SOCMIC)}
+            \begin{highlights}
+                \item Barcelona, Spain (February 2024). Contributed to the publication and received the \textbf{Best Communication Award}
+            \end{highlights}
+
+            \textbf{Annual Conference of the Spanish Society of Biomedical Engineering (CASEIB)}
+            \begin{highlights}
+                \item Cartagena, Spain (November 2023). Poster presentation
+            \end{highlights}
+
+            \textbf{ISOCS Winter School -- Chemical Sensing for Biomedical Applications}
+            \begin{highlights}
+                \item Bormio, Italy (2024). Winter school on transitioning chemical sensing from proof of concept to medical devices
+            \end{highlights}
+        \end{onecolentry}
+
+
+    \section{Awards and Scholarships}
+
+        \begin{onecolentry}
+            \textbf{Balsells Fellowship}, UC Irvine (2026)
+            \begin{highlights}
+                \item Competitive scholarship for Catalan researchers to conduct research at the University of California, Irvine
+            \end{highlights}
+
+            \textbf{Best Communication Award}, SOCMIC Conference (2024)
+            \begin{highlights}
+                \item Awarded for the publication contribution at the Conference of the Catalan Society of Intensive and Critical Medicine
+            \end{highlights}
+
+            \textbf{Santander ESCI-UPF Excellence Scholarship} (2020--2021, 2021--2022)
+            \begin{highlights}
+                \item Merit-based scholarship for academic excellence
+            \end{highlights}
+        \end{onecolentry}
+
+
+    \section{Additional Training}
+
+        \begin{onecolentry}
+            \begin{highlightsforbulletentries}
+                \item \textbf{Summer School at UPC (2023):} Applied Machine Learning to Solve Real-Life Problems; Web Application Development with Shiny
+                \item \textbf{Summer School at Eigenvector Research (2023):} MATLAB Course in Machine Learning
+                \item \textbf{Classical Ballet Conservatory:} Institut del Teatre, Barcelona (2014--2017)
+            \end{highlightsforbulletentries}
+        \end{onecolentry}
+
+
+    \section{Languages}
+
+        \begin{onecolentry}
+            \begin{highlightsforbulletentries}
+                \item \textbf{Spanish and Catalan:} Native
+                \item \textbf{English:} Advanced
+            \end{highlightsforbulletentries}
+        \end{onecolentry}
+
+
+    \section{Technologies}
+
+        \begin{onecolentry}
+            \begin{highlightsforbulletentries}
+                \item \textbf{Programming:} Python, R, SQL, MATLAB, Bash
+                \item \textbf{Libraries \& Frameworks:} PyTorch, Scikit-learn, NumPy, Pandas, Shiny
+                \item \textbf{Tools \& Platforms:} Git, Linux, Docker, Cloud Technologies, \LaTeX
+                \item \textbf{Areas:} Machine Learning, Deep Learning (CNNs), Statistical Modeling, Data Preprocessing, Biomedical Imaging
+            \end{highlightsforbulletentries}
+        \end{onecolentry}
+
+
+\end{document}
